@@ -11,13 +11,13 @@ Public API and Key Messages
 "
 Class {
 	#name : #OperationNode,
-	#superclass : #Node,
+	#superclass : #Object,
 	#instVars : [
 		'inputsNodes',
 		'inputs',
 		'output',
 		'type',
-		'visitor'
+		'engine'
 	],
 	#category : #libtensorflowOperation
 }
@@ -31,22 +31,33 @@ OperationNode class >> const: aValue [
 ]
 
 { #category : #arithmetic }
+OperationNode >> * anOperationNode [
+	"To simulate the eager mode on matmul TensorFlow Operation."
+
+	| result |
+	result := OperationNode new type: 'MatMul'.
+	result inputsNodes: { self . anOperationNode }.
+	result addEngine: (OperationEngine new).
+	^ result
+]
+
+{ #category : #arithmetic }
 OperationNode >> + anOperationNode [
-	"to simulate the eager mode on addition TensorFlow Operation."
+	"To simulate the eager mode on addition TensorFlow Operation."
 
 	| result |
 	result := OperationNode new type: 'Add'.
 	result inputsNodes: { self . anOperationNode }.
-	result accept: (AddVisitor new).
+	result addEngine: (OperationEngine new).
 	^ result
 ]
 
 { #category : #visiting }
-OperationNode >> accept: aVisitor [
-	"To add a visitor on current node."
+OperationNode >> addEngine: anEngine [
+	"To register a class which will doing computation."
 
-	visitor := aVisitor.
-	visitor visit: self
+	engine := anEngine.
+	engine compute: self
 ]
 
 { #category : #accessing }
