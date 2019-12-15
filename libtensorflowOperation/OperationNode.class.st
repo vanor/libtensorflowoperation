@@ -14,8 +14,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'inputsNodes',
-		'inputs',
-		'output',
+		'outputs',
 		'type',
 		'engine'
 	],
@@ -27,29 +26,7 @@ OperationNode class >> const: aValue [
 	"to build a const operation node with a value."
 
 	^ self new type: 'Const';
-					output: aValue
-]
-
-{ #category : #arithmetic }
-OperationNode >> * anOperationNode [
-	"To simulate the eager mode on matmul TensorFlow Operation."
-
-	| result |
-	result := OperationNode new type: 'MatMul'.
-	result inputsNodes: { self . anOperationNode }.
-	result addEngine: (OperationEngine new).
-	^ result
-]
-
-{ #category : #arithmetic }
-OperationNode >> + anOperationNode [
-	"To simulate the eager mode on addition TensorFlow Operation."
-
-	| result |
-	result := OperationNode new type: 'Add'.
-	result inputsNodes: { self . anOperationNode }.
-	result addEngine: (OperationEngine new).
-	^ result
+					outputs: { aValue }
 ]
 
 { #category : #visiting }
@@ -58,20 +35,6 @@ OperationNode >> addEngine: anEngine [
 
 	engine := anEngine.
 	engine compute: self
-]
-
-{ #category : #accessing }
-OperationNode >> inputs [
-	"To get inputs attribute."
-
-	^ inputs
-]
-
-{ #category : #accessing }
-OperationNode >> inputs: arrayValues [
-	"To set inputs attribute."
-
-	inputs := arrayValues
 ]
 
 { #category : #accessing }
@@ -89,17 +52,17 @@ OperationNode >> inputsNodes: anArray [
 ]
 
 { #category : #accessing }
-OperationNode >> output [
-	"to get output attribute."
+OperationNode >> outputs [
+	"to get outputs attribute."
 
-	^ output
+	^ outputs
 ]
 
 { #category : #accessing }
-OperationNode >> output: aValue [
-	"to set output attribute."
+OperationNode >> outputs: anArray [
+	"to set outputs attribute."
 
-	output := aValue
+	outputs := anArray
 ]
 
 { #category : #accessing }
